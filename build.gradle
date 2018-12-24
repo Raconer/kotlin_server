@@ -1,0 +1,73 @@
+/**
+  *  jcenter() VS Maven Central()
+  *
+  *  jcenter() : jcenter는 bintray.com이 운영하는 Maven Repository 이다.
+  *  Maven Central() :Maven Central은 sonatype.org이 운영하는 Maven Repository 이다
+  *
+  *  초기 Maven Central()을 기본 저장소로 사용하였다
+  *  하지만 Maven Central()는 개발자 친화적이지 않아 라이브러리 업로드가 어렵고 geeky의 레벨에 도달한 개발자들만 가능 했었다
+  *
+  *  그래서 jcenter()로 저장소를 변경하였고 jcenter()의 다양한 장점이 존재 한다.
+  *
+  *  jcenter() 장점
+  *  1. jcenter()는 CDM을 통해 라이브러리를 배포한다. 따라서 로딩이 빠르게 진행된다.
+  *  2. jcenter()는 지구상에서 가장큰 JAVA Repository 이다.
+  *   3. 저장소 업로드가 쉽다.
+  *   4. 보기 좋은 UI
+  *   만약 Maven Central에 라이브러리를 배포하고 싶다면 bintray site에서 한번의 클릭을 통해 배포 할 수 있다.(단 기본 설정을 했다는 전제하 )
+  **/
+
+
+buildscript {
+    ext.kotlin_version = '1.3.11'
+    ext.spring_boot_version = '1.5.9.RELEASE'
+
+    repositories {
+        jcenter()
+    }
+
+    // 참조 내용
+    dependencies{
+        // apply plugin: 'kotlin' 하기 위해
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // Required for Kotlin integration
+        // apply plugin: 'kotlin-spring' 하기 위해
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version" // See https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
+        // apply plugin: 'org.springframework.boot' 하기 위해
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
+
+
+    }
+}
+
+apply plugin: 'kotlin' // Required for Kotlin integration
+apply plugin: "kotlin-spring" // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
+apply plugin: 'org.springframework.boot' // 스프링 부트를 사용
+// apply plugin: 'io.spring.dependency-management' // 스프링 부트 의존성 관리 플러그인
+
+jar{
+    baseName = 'gs-rest-service'
+    version = '0.1.0'
+}
+
+repositories {
+    jcenter()
+    // DB연결을 위해 exposed 사용 repository
+    "exposed:exposed:https://dl.bintray.com/kotlin/exposed"
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
+    compile "org.springframework.boot:spring-boot-starter-web"
+
+    // exposed 사용( DB 접속 )
+    compile "org.jetbrains.exposed:exposed:0.10.4"
+    compile "com.h2database:h2:1.4.197"
+
+    // My Sql use gradle
+    compile('mysql:mysql-connector-java:8.0.11')
+
+    // MybatisMasterProperties의 @ConfigurationProperties(prefix = MybatisMasterProperties.PREFIX) 설정을 위해 사용된다.
+    // @Autowried 를 해서 application.properties데이터를 가져와 자동으로 setting하기 위해
+    // 다른 모듈에서 application.properties를 가져오기 위해 사용
+    compile("org.springframework.boot:spring-boot-configuration-processor:$rootProject.spring_boot_version")
+}
