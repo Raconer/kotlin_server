@@ -76,11 +76,6 @@ test{
 
 dependencies {
 
-    
-    
-    
-    
-    
     // mustache 를 사용하기 위한 dependencies
     compile('org.springframework.boot:spring-boot-starter-mustache')
 
