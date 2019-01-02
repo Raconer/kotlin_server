@@ -69,8 +69,18 @@ repositories {
     "exposed:exposed:https://dl.bintray.com/kotlin/exposed"
 }
 
+test{
+    // 테스트를 위한 JUnit5 사용
+    useJUnitPlatform()
+}
+
 dependencies {
 
+    
+    
+    
+    
+    
     // mustache 를 사용하기 위한 dependencies
     compile('org.springframework.boot:spring-boot-starter-mustache')
 
@@ -88,4 +98,12 @@ dependencies {
     // @Autowried 를 해서 application.properties데이터를 가져와 자동으로 setting하기 위해
     // 다른 모듈에서 application.properties를 가져오기 위해 사용
     compile("org.springframework.boot:spring-boot-configuration-processor:$rootProject.springBootVersion")
+
+
+    // JUnit 5로 테스트 하기
+    testCompile('org.springframework.boot:spring-boot-starter-test') {
+        exclude module: 'junit'
+    }
+    testImplementation('org.junit.jupiter:junit-jupiter-api')
+    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
 }
