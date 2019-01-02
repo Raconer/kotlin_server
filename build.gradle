@@ -19,34 +19,48 @@
 
 
 buildscript {
-    ext.kotlin_version = '1.3.11'
-    ext.spring_boot_version = '1.5.9.RELEASE'
 
+    ext{
+        //kotlinVersion = '1.2.41'
+        //springBootVersion = '2.0.2.RELEASE'
+        kotlinVersion = '1.3.11'
+        springBootVersion = '1.5.9.RELEASE'
+    }
     repositories {
         jcenter()
+        mavenCentral()
     }
 
     // 참조 내용
     dependencies{
         // apply plugin: 'kotlin' 하기 위해
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" // Required for Kotlin integration
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion" // Required for Kotlin integration
         // apply plugin: 'kotlin-spring' 하기 위해
-        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version" // See https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
+        classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlinVersion" // See https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
         // apply plugin: 'org.springframework.boot' 하기 위해
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version"
-
-
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
     }
 }
 
 apply plugin: 'kotlin' // Required for Kotlin integration
 apply plugin: "kotlin-spring" // https://kotlinlang.org/docs/reference/compiler-plugins.html#spring-support
 apply plugin: 'org.springframework.boot' // 스프링 부트를 사용
-// apply plugin: 'io.spring.dependency-management' // 스프링 부트 의존성 관리 플러그인
+// 스프링 부트 의존성 관리 플러그인
+// 2.0.2.RELEASE 에 사용하기 위해 작성
+// 선언을 안하면 spring 명령어를 사용하지 못한다.
+//apply plugin: 'io.spring.dependency-management'
 
 jar{
     baseName = 'gs-rest-service'
     version = '0.1.0'
+}
+
+sourceCompatibility = 1.8
+compileKotlin {
+    kotlinOptions {
+        freeCompilerArgs = ["-Xjsr305=strict"]
+        jvmTarget = "1.8"
+    }
 }
 
 repositories {
@@ -56,7 +70,11 @@ repositories {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version" // Required for Kotlin integration
+
+    // mustache 를 사용하기 위한 dependencies
+    compile('org.springframework.boot:spring-boot-starter-mustache')
+
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion" // Required for Kotlin integration
     compile "org.springframework.boot:spring-boot-starter-web"
 
     // exposed 사용( DB 접속 )
@@ -69,5 +87,5 @@ dependencies {
     // MybatisMasterProperties의 @ConfigurationProperties(prefix = MybatisMasterProperties.PREFIX) 설정을 위해 사용된다.
     // @Autowried 를 해서 application.properties데이터를 가져와 자동으로 setting하기 위해
     // 다른 모듈에서 application.properties를 가져오기 위해 사용
-    compile("org.springframework.boot:spring-boot-configuration-processor:$rootProject.spring_boot_version")
+    compile("org.springframework.boot:spring-boot-configuration-processor:$rootProject.springBootVersion")
 }
