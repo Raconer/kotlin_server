@@ -17,18 +17,16 @@
   *   만약 Maven Central에 라이브러리를 배포하고 싶다면 bintray site에서 한번의 클릭을 통해 배포 할 수 있다.(단 기본 설정을 했다는 전제하 )
   **/
 
-
 buildscript {
 
     ext{
         //kotlinVersion = '1.2.41'
-        //springBootVersion = '2.0.2.RELEASE'
+        springBootVersion = '2.0.2.RELEASE'
         kotlinVersion = '1.3.11'
-        springBootVersion = '1.5.9.RELEASE'
+        //springBootVersion = '1.5.9.RELEASE'
     }
     repositories {
         jcenter()
-        mavenCentral()
     }
 
     // 참조 내용
@@ -48,7 +46,7 @@ apply plugin: 'org.springframework.boot' // 스프링 부트를 사용
 // 스프링 부트 의존성 관리 플러그인
 // 2.0.2.RELEASE 에 사용하기 위해 작성
 // 선언을 안하면 spring 명령어를 사용하지 못한다.
-//apply plugin: 'io.spring.dependency-management'
+apply plugin: 'io.spring.dependency-management'
 
 jar{
     baseName = 'gs-rest-service'
@@ -69,8 +67,8 @@ repositories {
     "exposed:exposed:https://dl.bintray.com/kotlin/exposed"
 }
 
-test{
-    // 테스트를 위한 JUnit5 사용
+// 테스트 JUnit5
+test {
     useJUnitPlatform()
 }
 
@@ -94,8 +92,7 @@ dependencies {
     // 다른 모듈에서 application.properties를 가져오기 위해 사용
     compile("org.springframework.boot:spring-boot-configuration-processor:$rootProject.springBootVersion")
 
-
-    // JUnit 5로 테스트 하기
+    // 테스트 JUnit5
     testCompile('org.springframework.boot:spring-boot-starter-test') {
         exclude module: 'junit'
     }
