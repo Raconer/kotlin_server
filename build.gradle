@@ -26,6 +26,7 @@ buildscript {
         //springBootVersion = '1.5.9.RELEASE'
     }
     repositories {
+        // dependencies들을 가져오기 위해 저장소 지정
         jcenter()
     }
 
@@ -46,6 +47,7 @@ apply plugin: 'org.springframework.boot' // 스프링 부트를 사용
 // 스프링 부트 의존성 관리 플러그인
 // 2.0.2.RELEASE 에 사용하기 위해 작성
 // 선언을 안하면 spring 명령어를 사용하지 못한다.
+// jcenter() Repository 필요
 apply plugin: 'io.spring.dependency-management'
 
 jar{
@@ -67,12 +69,16 @@ repositories {
     "exposed:exposed:https://dl.bintray.com/kotlin/exposed"
 }
 
-// 테스트 JUnit5
-test {
-    useJUnitPlatform()
-}
 
 dependencies {
+
+    /**
+     * Reflection : 런타임시 자신의 프로그램 구조에 대한 내성(내부 성질) 검사를 허용하는 언어 및 라이브러리 기능 세트이다
+     * 코틀린은 기능과 특성을 언어로 *일류 시민으로 만들고 이를 기능적 또는 반응 스타일을 사용하는 것과 밀접하게 얽혀 있다
+     * (*런타임에 속성이나 기능의 이름이나 유형을 학습하는등)
+     * 현재 dependencies 에 추가 하지 않는 이유는 "org.jetbrains.exposed:exposed:0.10.4"를 compile시 reflect 가 같이 추가가 되기 떄문이다.
+     **/
+    // compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
 
     // mustache 를 사용하기 위한 dependencies
     compile('org.springframework.boot:spring-boot-starter-mustache')
@@ -91,11 +97,4 @@ dependencies {
     // @Autowried 를 해서 application.properties데이터를 가져와 자동으로 setting하기 위해
     // 다른 모듈에서 application.properties를 가져오기 위해 사용
     compile("org.springframework.boot:spring-boot-configuration-processor:$rootProject.springBootVersion")
-
-    // 테스트 JUnit5
-    testCompile('org.springframework.boot:spring-boot-starter-test') {
-        exclude module: 'junit'
-    }
-    testImplementation('org.junit.jupiter:junit-jupiter-api')
-    testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine')
 }

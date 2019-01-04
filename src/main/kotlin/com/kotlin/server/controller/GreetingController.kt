@@ -21,11 +21,10 @@ class GreetingController{
 
     @GetMapping("/")
     fun main(model: Model, request:HttpServletRequest):String{
-        model.addAttribute("mainData", "Send Main Test Data")
-        model[""] = "test" // spring 2.0.2.RELEASE 에서 사용가능
-        //model["title"] = "Blog"
-        System.out.println(request.requestURI)
-        System.out.println(request.requestURL)
+        //model.addAttribute("mainData", "Send Main Test Data")
+        val cnt = noticeData.getNoticeCnt()
+        model["mainData"] = "Send Main Test Data" // spring 2.0.2.RELEASE 에서 사용가능
+        model["cnt"] = cnt
 
         return "main"
     }
